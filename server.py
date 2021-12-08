@@ -1,19 +1,20 @@
-# Steps #
-## Open and listen on port XXXX
-## Process socket data
-## Split string into sections
-## process serialization
-## Print or send to file
-## Open and listen on port XXXX
-## process socket data
-## process encrypted file
-## print file contents
+""" Server Side
 
-
+Steps:
+1. Open and listen on port XXXX
+2. Process socket data
+3. Split string into sections
+4. Process serialization
+5. Print or send to file
+6. Open and listen on port XXXX
+7. Process socket data
+8. Process encrypted file
+9. Print file contents
+"""
 
 import socket
 import pickle
-import json 
+import json
 import sys
 
 from dict2xml import dict2xml
@@ -28,6 +29,7 @@ key = "R29kemlsbGFJc0p1c3RBSHVnZVRvYWRDYWxsZWRUaW0="
 # Data from socket
 inc_data = ""
 
+
 # Function for decrpytion of dictionary
 def decrypt(token: bytes):
     return Fernet(key).decrypt(token)
@@ -36,7 +38,7 @@ def decrypt(token: bytes):
 def start_server(PORT):
     global inc_data
     # Start up server
-    HOST = '127.0.0.1' # Local machine
+    HOST = '127.0.0.1'  # Local machine
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         try:
@@ -58,21 +60,19 @@ def start_server(PORT):
                 inc_data = repr(data)
 
 
-
-
-### Expecting Serialization data ####
+""" Expecting Serialization data """
 start_server(1337)
 
 full_data = inc_data[2:-1].split('~')
 
 
-if (full_data[0] == 'y'): 
+if (full_data[0] == 'y'):
     message = decrypt(full_data[1].encode('utf-8'))
 else:
     message = full_data[1].replace('\\\\', '\\')
     message = message.encode('utf-8')
-    message = message.decode('unicode-escape').encode('latin1')    
-    
+    message = message.decode('unicode-escape').encode('latin1')
+
 
 def xml_deserialize(message):
     msg_parsed = str(message)[2:-1]
@@ -82,12 +82,15 @@ def xml_deserialize(message):
     msg_dict = dict(s_dict)
 
     return(msg_dict)
-    
 
-# De-serialize
-if (full_data[0] == "pickle"): dict = pickle.loads(message)
-if (full_data[0] == "json"): dict = json.loads(message)
-if (full_data[0] == "xml"): dict = xml_deserialize(message); 
+
+# De-serialize data
+if (full_data[0] == "pickle"):
+    dict = pickle.loads(message)
+if (full_data[0] == "json"):
+    dict = json.loads(message)
+if (full_data[0] == "xml"):
+    dict = xml_deserialize(message)
 
 
 def file_creator(content):
@@ -97,29 +100,27 @@ def file_creator(content):
     filename = ""
     filename = "file" + str(file_num) + ".txt"
     found = file_exists(filename)
-    
-    while(True):    
+
+    while(True):
         filename = "file" + str(file_num) + ".txt"
-        if(file_exists(filename) == False):
-            file = open(filename,'w+')
+        if(file_exists(filename) is False):
+            file = open(filename, 'w+')
             file.write(content)
             file.close()
             print(f"{filename} created!")
             break
-                
-        file_num += 1   
-    
-    
-    
-    
-    
+
+        file_num += 1
+
+
 # Output to screen
-if (full_data[2] == "1"): print(f"You provided the server with:\n{dict}")
-if (full_data[2] == "2"): file_creator(str(dict))
+if (full_data[2] == "1"):
+    print(f"You provided the server with:\n{dict}")
+if (full_data[2] == "2"):
+    file_creator(str(dict))
 
 
-
-### Expecting File ###
+""" Expecting File """
 start_server(13373)
 
 full_data = inc_data[2:-1]
