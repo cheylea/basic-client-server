@@ -44,8 +44,8 @@ def send_data(serialized_data, PORT):
 
 """Serialize Section"""
 # Chose serialization type
-s_type = input("### Please Choose serialization type \
-               ###\n### Pickle Binary (1), Json (2), XML (3) ###\n")
+s_type = input("### Please Choose Serialization Type ###"
+               "\n### Pickle Binary (1), Json (2), XML (3) ###\n")
 
 # Serialize data
 if(s_type == '1'):
@@ -60,8 +60,8 @@ if(s_type == '3'):
 
 
 # Output to screen or file
-option = input("### Do you want to output \
-               to the screen (1) or file (2) ###\n").lower()
+option = input("### Do you want to output "
+               "to the screen (1) or file (2) ###\n").lower()
 
 # Append to data for later review, seperated by ~
 # Method~Serialized~Print/File
@@ -77,8 +77,8 @@ print("### Your data has been sent to ###")
 """File Section"""
 # File choice and encrpytion
 file_choice = input("\n\n### Please Choose enter your filename ###\n")
-enc_file_choice = input('### Do you wish to locally encrypt your file? \
-                        (Y) (N) ###\n').lower()
+enc_file_choice = input("### Do you wish to locally encrypt your file?"
+                        "(Y) (N) ###\n").lower()
 
 # Take in a read file
 f = open(file_choice, "r")
