@@ -87,12 +87,12 @@ def main():
     final_data = parse_final_data(method, serialized, option)
 
     # Send data to server
-    send_data(final_data, 5000)
+    send_data(final_data, 1337)
     print("### Your data has been sent to ###")
 
     """File Section"""
     # File choice and encrpytion
-    file_choice = input("\n\n### Please Choose enter your filename ###\n")
+    file_choice = input("\n\n### Please choose a .txt filename ###\n")
     enc_file_choice = input("### Do you wish to locally encrypt your file?"
                             "(Y) (N) ###\n").lower()
 
