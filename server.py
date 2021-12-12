@@ -97,7 +97,7 @@ def main():
 
     # Data from socket
     inc_data = ""
-    start_server(5000)
+    start_server(1337)
 
     """ Expecting Serialization data """
 
