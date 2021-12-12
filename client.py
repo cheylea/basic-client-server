@@ -18,7 +18,7 @@ from dict2xml import dict2xml
 from cryptography.fernet import Fernet
 
 # Key for fernet encryption
-key = "R29kemlsbGFJc0p1c3RBSHVnZVRvYWRDYWxsZWRUaW0 = "
+key = "R29kemlsbGFJc0p1c3RBSHVnZVRvYWRDYWxsZWRUaW0="
 
 # Dictionary to send
 default_dict = {"mykey": "myvalue", "yourkey": "yourvalue"}
