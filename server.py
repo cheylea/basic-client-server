@@ -46,8 +46,9 @@ def start_server(PORT):
         except:
             print(f"Unable to bind to {HOST}:{PORT}")
             sys.exit(1)
-        print(f"Server Open on {HOST}:{PORT}")
+        print(f"Server Open on {HOST}:{PORT}")       
         s.listen()
+        s.settimeout(30)
         conn, addr = s.accept()
         with conn:
             print(f"{addr[0]} Connected")
@@ -57,13 +58,32 @@ def start_server(PORT):
                     break
                 conn.sendall(data)
                 inc_data = repr(data)
+                
+    
+def serialized_receive():
+    start_server(5000)
+    """ Receiving Serialization data """
 
+    full_data = inc_data[2:-1].split('~')
 
-def stop_server():
-    print("Server Closed")
-    sys.exit(1)
+    message = full_data[1].replace('\\\\', '\\')
+    message = message.encode('utf-8')
+    message = message.decode('unicode-escape').encode('latin1')
 
-
+    # De-serialize data
+    if (full_data[0] == "pickle"):
+        dict_ = pickle.loads(message)
+    if (full_data[0] == "json"):
+        dict_ = json.loads(message)
+    if (full_data[0] == "xml"):
+        dict_ = xml_deserialize(message)
+        
+    # Output to screen
+    if (full_data[2] == "1"):
+        print(f"You provided the server with:\n{dict_}")
+    if (full_data[2] == "2"):
+        file_creator(str(dict_))
+    
 def xml_deserialize(message):
     msg_parsed = str(message)[2:-1]
     msg_deserial = xmltodict.parse(msg_parsed)
@@ -76,6 +96,13 @@ def xml_deserialize(message):
     except KeyError:
         return(s_dict)
 
+def file_receive():
+    """ Receving File """
+    
+    start_server(5050)
+    full_data = inc_data[2:-1]
+    decrypt_text = decrypt(full_data.encode('utf-8')).decode()
+    print(decrypt_text)
 
 def file_creator(content):
     # If file exists don't write, increment number
@@ -94,40 +121,21 @@ def file_creator(content):
 
 
 def main():
-
+    global inc_data
     # Data from socket
     inc_data = ""
-    start_server(1337)
+    
+    try:
+        if(sys.argv[1] == "-T"):
+            for i in range(3):
+                serialized_receive()
+            file_receive()
+    except:
+        pass
+        
+    serialized_receive()
+    file_receive()
 
-    """ Expecting Serialization data """
-
-    full_data = inc_data[2:-1].split('~')
-
-    if (full_data[0] == 'y'):
-        message = decrypt(full_data[1].encode('utf-8'))
-    else:
-        message = full_data[1].replace('\\\\', '\\')
-        message = message.encode('utf-8')
-        message = message.decode('unicode-escape').encode('latin1')
-
-    # De-serialize data
-    if (full_data[0] == "pickle"):
-        dict_ = pickle.loads(message)
-    if (full_data[0] == "json"):
-        dict_ = json.loads(message)
-    if (full_data[0] == "xml"):
-        dict_ = xml_deserialize(message)
-    # Output to screen
-    if (full_data[2] == "1"):
-        print(f"You provided the server with:\n{dict_}")
-    if (full_data[2] == "2"):
-        file_creator(str(dict_))
-
-    """ Expecting File """
-
-    full_data = inc_data[2:-1]
-    decrypt_text = decrypt(full_data.encode('utf-8')).decode()
-    print(decrypt_text)
 
 
 if __name__ == "__main__":
