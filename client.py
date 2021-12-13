@@ -20,19 +20,14 @@ from cryptography.fernet import Fernet
 # Key for fernet encryption
 key = "R29kemlsbGFJc0p1c3RBSHVnZVRvYWRDYWxsZWRUaW0="
 
-# Dictionary to send
-default_dict = {"mykey": "myvalue", "yourkey": "yourvalue"}
+default_dict = {}
 
 # Functions for encrpytion of dictionary
-
-
 def encrypt(message: bytes):
     return Fernet(key).encrypt(message)
 
 
 # Send data to server
-
-
 def send_data(serialized_data, PORT):
     HOST = '127.0.0.1'  # Local machine
 
@@ -40,13 +35,17 @@ def send_data(serialized_data, PORT):
         s.connect((HOST, PORT))
         s.sendall(serialized_data.encode('latin1'))
         data = s.recv(1024)
-        s.close()
-        print('Received', repr(data))
-        return data.decode('latin1')
+
+def dict_enter():
+    global default_dict
+    value_amounts = input("### How many values do you want to use? ###\n")
+    for v in range(int(value_amounts)):
+        dict_key = input("### Enter a key ###\n")
+        dict_value = input("### Enter a value ###\n")
+        default_dict[dict_key] = dict_value
+        
 
 # Whole Structure to query user
-
-
 def serialize(default_dict, s_type):
     # Serialize data
     serialized = ""
@@ -69,7 +68,16 @@ def parse_final_data(method, serialized, option):
 
 
 def main():
+    global default_dict
     """Serialize Section"""
+    
+    # Dictionary to send
+    d_type = input("### Do you wish to manually enter a dictionary? (Y) (N) ###\n")
+    if(d_type.lower() == "y"):
+        dict_enter()
+    else:
+        default_dict = {"mykey": "myvalue", "yourkey": "yourvalue"}
+        
     # Chose serialization type
     s_type = input("### Please Choose Serialization Type ###"
                    "\n### Pickle Binary (1), Json (2), XML (3) ###\n")
@@ -87,12 +95,12 @@ def main():
     final_data = parse_final_data(method, serialized, option)
 
     # Send data to server
-    send_data(final_data, 1337)
+    send_data(final_data, 5000)
     print("### Your data has been sent to ###")
 
     """File Section"""
     # File choice and encrpytion
-    file_choice = input("\n\n### Please choose a .txt filename ###\n")
+    file_choice = input("\n\n### Please Choose enter your filename that includes .txt ###\n")
     enc_file_choice = input("### Do you wish to locally encrypt your file?"
                             "(Y) (N) ###\n").lower()
 
@@ -101,11 +109,13 @@ def main():
     file_contents = ""
     for line in f:
         file_contents += line
-
+    
+    # Encrypt file contents (.txt files only contain text)
+    enc_file_content = encrypt(file_contents.encode())
+    
     # Save encrypted version to disc
     if(enc_file_choice == "y"):
-        # Encrypt file contents (.txt files only contain text)
-        enc_file_content = encrypt(file_contents.encode())
+
         # Create encrypted file name XXXX_enc.txt
         split_name = file_choice.split(".")
         enc_file_name = split_name[0] + "_enc.txt"
@@ -115,11 +125,10 @@ def main():
         file.write(enc_file_content.decode())
         file.close()
         print(f"{enc_file_name} created!")
-        # Send data to server
-        send_data(enc_file_content.decode(), 5000)
+        
+    send_data(enc_file_content.decode(), 5050)
 
-    # Close the socket when done
-    # s.close
+
 
 
 if __name__ == "__main__":
