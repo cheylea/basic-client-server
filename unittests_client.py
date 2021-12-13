@@ -55,7 +55,7 @@ class TestClient(unittest.TestCase):
                 parse_final_data(
                     method=method, serialized=data, option="1"
                 ), 5000
-            ), "something"
+            ), "none"
         )
         print("[+] send_data passed")
 
