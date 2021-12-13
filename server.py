@@ -48,7 +48,7 @@ def start_server(PORT):
             sys.exit(1)
         print(f"Server Open on {HOST}:{PORT}")       
         s.listen()
-        s.settimeout(30)
+        s.settimeout(10)
         conn, addr = s.accept()
         with conn:
             print(f"{addr[0]} Connected")
