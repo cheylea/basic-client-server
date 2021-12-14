@@ -125,18 +125,14 @@ def main():
     # Data from socket
     inc_data = ""
     
-    try:
+    if len(sys.argv) > 1:
         if(sys.argv[1] == "-T"):
-            for i in range(3):
-                serialized_receive()
-            file_receive()
-    except:
-        pass
-        
-    serialized_receive()
-    file_receive()
+            for i in range(2):
+                serialized_receive()   
+    else:
+        serialized_receive()
+        file_receive()
 
-
-
+    
 if __name__ == "__main__":
     main()
