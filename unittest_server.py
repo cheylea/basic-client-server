@@ -1,6 +1,6 @@
 """Unittest client side
 
-Class tests: 
+Class tests performed: 
 1. Server test
 2. Decryption test
 3. File creation 
