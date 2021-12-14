@@ -1,6 +1,6 @@
 """ Unittests for client side
 
-Unit tests: 
+Unit tests performed: 
 1. Server connection
 2. Json serialization
 3. XML serialization
