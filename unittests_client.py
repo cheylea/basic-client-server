@@ -1,3 +1,16 @@
+""" Unittests for client side
+
+Unit tests: 
+1. Server connection
+2. Json serialization
+3. XML serialization
+4. Pickle serialization
+5. Invalid serialization
+6. Data submission
+7. Encryption process
+8. Parse parameter
+"""
+
 import unittest
 from client import serialize, send_data, encrypt, parse_final_data
 import socket
@@ -6,6 +19,7 @@ import time
 
 class TestClient(unittest.TestCase):
 
+# Test whether server is active
     def test_server_active(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             try:
@@ -17,6 +31,7 @@ class TestClient(unittest.TestCase):
                 self.assertTrue(False)
                 print("[-] Server is not active")
 
+# Asserting the output of the serialize function for JSON    
     def test_serialize_json(self):
         print("[*] Testing serialize for JSON")
         self.assertEqual(
@@ -25,6 +40,7 @@ class TestClient(unittest.TestCase):
         )
         print("[+] Serialize for JSON passed")
 
+# Asserting the output of the serialize function for XML 
     def test_serialize_xml(self):
         print("[*] Testing serialize for XML")
         self.assertEqual(
@@ -33,6 +49,7 @@ class TestClient(unittest.TestCase):
         )
         print("[+] Serialize for XML passed")
 
+# Asserting the output of the serialize function for Pickle  
     def test_serialize_pickle(self):
         print("[*] Testing serialize for Pickle")
         self.assertEqual(
@@ -41,13 +58,14 @@ class TestClient(unittest.TestCase):
         )
         print("[+] Serialize for Pickle passed")
 
+# Invalid type serialization test
     def test_invalid_serialize(self):
         print("[*] Testing serialize for invalid type")
         self.assertEqual(
             serialize({"a": 1, "b": 2}, "400"),
             ('', '')
         )
-
+# Test send data function 
     def test_send_data(self):
         print("[*] Testing send_data")
 
@@ -59,6 +77,7 @@ class TestClient(unittest.TestCase):
                         None)
         print("[+] send_data passed")
 
+# Perform enryption test
     def test_encrypt(self):
         print("[*] Testing encrypt")
         self.assertTrue(
@@ -66,6 +85,7 @@ class TestClient(unittest.TestCase):
         )
         print("[+] encrypt passed")
 
+# Passing final data to tests the respective function 
     def test_parse_final_data(self):
         print("[*] Testing parse_final_data")
         self.assertEqual(
