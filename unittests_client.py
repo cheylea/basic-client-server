@@ -2,15 +2,17 @@ import unittest
 from client import serialize, send_data, encrypt, parse_final_data
 import socket
 
+import time
 
 class TestClient(unittest.TestCase):
 
     def test_server_active(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             try:
-                s.connect(("localhost", 5000))
+                s.connect(("127.0.0.1", 5000))
                 self.assertTrue(True)
                 print("[+] Server is active")
+                s.close()
             except ConnectionRefusedError:
                 self.assertTrue(False)
                 print("[-] Server is not active")
@@ -51,12 +53,10 @@ class TestClient(unittest.TestCase):
 
         data, method = serialize({"a": 1, "b": 2}, "2")
         self.assertEqual(
-            send_data(
-                parse_final_data(
-                    method=method, serialized=data, option="1"
-                ), 5000
-            ), "none"
-        )
+            send_data(parse_final_data(
+                method=method, serialized=data, option="1"),
+                    5000),
+                        None)
         print("[+] send_data passed")
 
     def test_encrypt(self):
