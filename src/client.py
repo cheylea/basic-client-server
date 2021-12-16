@@ -1,12 +1,8 @@
+#!/usr/bin/env python3
 """Client Side
 
-Steps:
-1. Check server connection open
-2. Choose serializiation type / output
-3. Send data
-4. Choose file
-5. Choose if saved locally
-6. Send data
+Run this file to create, serialize and send a dictionary
+and send a text file to the server.
 """
 
 import socket
@@ -22,13 +18,25 @@ key = "R29kemlsbGFJc0p1c3RBSHVnZVRvYWRDYWxsZWRUaW0="
 
 default_dict = {}
 
+
 # Functions for encrpytion of dictionary
 def encrypt(message: bytes):
+    """Encrypt the provided variable
+
+    Key arguments
+    message -- the value to be encrypted
+    """
     return Fernet(key).encrypt(message)
 
 
 # Send data to server
 def send_data(serialized_data, PORT):
+    """Send the data to the server
+
+    Key arguments
+    serialized_data -- a string of serialized data
+    PORT -- Server port number eg. 5000
+    """
     HOST = '127.0.0.1'  # Local machine
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -36,18 +44,24 @@ def send_data(serialized_data, PORT):
         s.sendall(serialized_data.encode('latin1'))
         data = s.recv(1024)
 
+
 def dict_enter():
+    """Create a custom dictionary"""
     global default_dict
     value_amounts = input("### How many values do you want to use? ###\n")
     for v in range(int(value_amounts)):
         dict_key = input("### Enter a key ###\n")
         dict_value = input("### Enter a value ###\n")
         default_dict[dict_key] = dict_value
-        
 
-# Whole Structure to query user
+
 def serialize(default_dict, s_type):
-    # Serialize data
+    """ Serialize data
+
+    Key arguments
+    default_dict -- value to use as a default if other value not provided
+    s_type -- type of serilization required
+    """
     serialized = ""
     method = ""
     if(s_type == '1'):
@@ -64,20 +78,32 @@ def serialize(default_dict, s_type):
 
 
 def parse_final_data(method, serialized, option):
+    """Concatenate Optional Variables
+
+    Key arguments
+    method -- Serialization method: Pickle Binary (1), Json (2), XML (3)
+    serialized -- the seralized data
+    option -- Output method: Print to Screen (1) or Save to File (2)
+    """
     return method + '~' + str(serialized)[2:-1] + '~' + str(option)
 
 
 def main():
+    """Client Main Function
+    The starting point for execution for the programme.
+    """
     global default_dict
     """Serialize Section"""
-    
+
     # Dictionary to send
-    d_type = input("### Do you wish to manually enter a dictionary? (Y) (N) ###\n")
+    d_type = input("### Do you wish to manually enter"
+                   "a dictionary? (Y) (N) ###\n")
     if(d_type.lower() == "y"):
         dict_enter()
     else:
+        print("### Default Dictionary Used ###")
         default_dict = {"mykey": "myvalue", "yourkey": "yourvalue"}
-        
+
     # Chose serialization type
     s_type = input("### Please Choose Serialization Type ###"
                    "\n### Pickle Binary (1), Json (2), XML (3) ###\n")
@@ -100,7 +126,8 @@ def main():
 
     """File Section"""
     # File choice and encrpytion
-    file_choice = input("\n\n### Please Choose enter your filename that includes .txt ###\n")
+    file_choice = input("\n\n### Please enter your filename"
+                        "ending in .txt ###\n")
     enc_file_choice = input("### Do you wish to locally encrypt your file?"
                             "(Y) (N) ###\n").lower()
 
@@ -109,10 +136,10 @@ def main():
     file_contents = ""
     for line in f:
         file_contents += line
-    
+
     # Encrypt file contents (.txt files only contain text)
     enc_file_content = encrypt(file_contents.encode())
-    
+
     # Save encrypted version to disc
     if(enc_file_choice == "y"):
 
@@ -125,12 +152,8 @@ def main():
         file.write(enc_file_content.decode())
         file.close()
         print(f"{enc_file_name} created!")
-        
+
     send_data(enc_file_content.decode(), 5050)
-
-
-
 
 if __name__ == "__main__":
     main()
-
