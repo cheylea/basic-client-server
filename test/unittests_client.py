@@ -1,30 +1,30 @@
 #!/usr/bin/env python3
+"""Client Side Unit Tests
+This file contains a unit testing class for testing the functionality
+of src/client.py.
+"""
 
 import unittest
 import os
 import inspect
 import sys
+import socket
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir) 
+dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(dir)
+sys.path.insert(0, parentdir)
 
 from src.client import serialize, send_data, encrypt, parse_final_data
 from src.server import decrypt
-import socket
 
 
-
-""" Client Side Unit Tests
-This file contains a unit testing class for testing the functionality
-of src/client.py.
-"""
 pickle_string = (
-'\x80\x04\x95\x11\x00\x00\x00\x00' +
-'\x00\x00\x00}\x94(\x8c\x01a\x94K' +
-'\x01\x8c\x01b\x94K\x02u.'
-).encode("latin1")
-    
+                 '\x80\x04\x95\x11\x00\x00\x00\x00' +
+                 '\x00\x00\x00}\x94(\x8c\x01a\x94K' +
+                 '\x01\x8c\x01b\x94K\x02u.'
+            ).encode("latin1")
+
+
 class TestClient(unittest.TestCase):
     """ Client Side Unit Tests"""
 
@@ -41,7 +41,7 @@ class TestClient(unittest.TestCase):
                 print("[-] Server is not active")
 
     def test_serialize_json(self):
-        """Asserting the output of the serialize function for JSON"""
+        """Assert the output of the serialize function for JSON"""
         print("[*] Testing serialize for JSON")
         self.assertEqual(
             serialize({"a": 1, "b": 2}, "2"),
@@ -50,7 +50,7 @@ class TestClient(unittest.TestCase):
         print("[+] Serialize for JSON passed")
 
     def test_serialize_xml(self):
-        """Asserting the output of the serialize function for XML"""
+        """Assert the output of the serialize function for XML"""
         print("[*] Testing serialize for XML")
         self.assertEqual(
             serialize({"a": 1, "b": 2}, "3"),
@@ -59,17 +59,17 @@ class TestClient(unittest.TestCase):
         print("[+] Serialize for XML passed")
 
     def test_serialize_pickle(self):
-        """Asserting the output of the serialize function for Pickle"""
+        """Assert the output of the serialize function for Pickle"""
         print("[*] Testing serialize for Pickle")
         self.assertEqual(
             serialize({"a": 1, "b": 2}, "1"),
-            (pickle_string
-             ,'pickle')
+            (pickle_string,
+             'pickle')
         )
         print("[+] Serialize for Pickle passed")
 
     def test_invalid_serialize(self):
-        """Testing the serialization for an invalid type"""
+        """Test the serialization for an invalid type"""
         print("[*] Testing serialize for invalid type")
         self.assertEqual(
             serialize({"a": 1, "b": 2}, "400"),
@@ -93,12 +93,12 @@ class TestClient(unittest.TestCase):
         encrypt_string = encrypt(b'a secret message')
         self.assertEqual(
             decrypt(encrypt_string), b'a secret message'
-            )        
-        
+            )
+
         print("[+] encrypt passed")
 
     def test_parse_final_data(self):
-        """Test the parse_final_data function"""
+        """Test the the final data format"""
         print("[*] Testing parse_final_data")
         self.assertEqual(
             parse_final_data(

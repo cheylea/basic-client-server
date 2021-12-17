@@ -20,8 +20,8 @@ key = "R29kemlsbGFJc0p1c3RBSHVnZVRvYWRDYWxsZWRUaW0="
 inc_data = ""
 
 
-# Function for decrpytion of dictionary
 def decrypt(token: bytes):
+    """Function for decrpytion of dictionary"""
     return Fernet(key).decrypt(token)
 
 
@@ -55,12 +55,12 @@ def start_server(PORT):
 
 
 def serialized_receive():
-    """Receiving Serialization data"""
+    """Receiving Serialized data"""
     # Open server
     start_server(5000)
     full_data = inc_data[2:-1].split('~')
 
-    #
+    # Parse received data
     message = full_data[1].replace('\\\\', '\\')
     message = message.encode('utf-8')
     message = message.decode('unicode-escape').encode('latin1')
@@ -82,7 +82,7 @@ def serialized_receive():
 
 def xml_deserialize(message):
     """De-Serialize a Serialized XML string
-    
+
     Keyword arguments:
     message -- the string to de-serialize
     """
@@ -99,15 +99,15 @@ def xml_deserialize(message):
 
 
 def file_receive():
-    """ Receiving File """
+    """Receiving File"""
     # Open server
     start_server(5050)
 
     full_data = inc_data[2:-1]
     plain_text = decrypt(full_data.encode('utf-8')).decode()
     decrypt_text = plain_text.split("~")
-    
-    if(decrypt_text[1] == "1"):   
+
+    if(decrypt_text[1] == "1"):
         print(decrypt_text[0])
     if(decrypt_text[1] == "2"):
         file_creator(decrypt_text[0], "file")
@@ -115,7 +115,7 @@ def file_receive():
 
 def file_creator(content, type):
     """Create file
-    
+
     Keyword arguments:
     content -- content for the file as a string
     """
