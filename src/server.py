@@ -7,10 +7,10 @@ import socket
 import pickle
 import json
 import sys
+import xmltodict
 
 from dict2xml import dict2xml
 from cryptography.fernet import Fernet
-import xmltodict
 from os.path import exists as file_exists
 
 # Key for fernet encryption
@@ -77,7 +77,7 @@ def serialized_receive():
     if (full_data[2] == "1"):
         print(f"You provided the server with:\n{dict_}")
     if (full_data[2] == "2"):
-        file_creator(str(dict_))
+        file_creator(str(dict_), "dictionary")
 
 
 def xml_deserialize(message):
@@ -103,13 +103,17 @@ def file_receive():
     # Open server
     start_server(5050)
 
-    #
     full_data = inc_data[2:-1]
-    decrypt_text = decrypt(full_data.encode('utf-8')).decode()
-    print(decrypt_text)
+    plain_text = decrypt(full_data.encode('utf-8')).decode()
+    decrypt_text = plain_text.split("~")
+    
+    if(decrypt_text[1] == "1"):   
+        print(decrypt_text[0])
+    if(decrypt_text[1] == "2"):
+        file_creator(decrypt_text[0], "file")
 
 
-def file_creator(content):
+def file_creator(content, type):
     """Create file
     
     Keyword arguments:
@@ -118,7 +122,7 @@ def file_creator(content):
 
     file_num = 1
     while(True):
-        filename = "file" + str(file_num) + ".txt"
+        filename = type + str(file_num) + ".txt"
         # If file exists don't write, increment number
         if(file_exists(filename) is False):
             file = open(filename, 'w+')
