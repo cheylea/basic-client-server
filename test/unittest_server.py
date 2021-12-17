@@ -21,10 +21,6 @@ from src.client import encrypt
 class TestServer(unittest.TestCase):
     """ Server Side Unit Tests"""
 
-    def test_server(self):
-        """Compare test value with True"""
-        self.assertTrue(True)
-
     def test_decrypt_text(self):
         """Check if string has interference after encryption and decryption"""
         encrypted_text = encrypt(b"Hello World")
