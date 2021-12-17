@@ -20,10 +20,8 @@ setup(
     license=license,
     packages=[''],
     scripts=[
-             'src/server',
-             'src/client',
-             'test/unittest_server',
-             'test/unittests_client',
+             'src/server.py',
+             'src/client.py',
             ],
-    python_requires=">=python 3.8.10"
+    python_requires=">=python3.8.10",
 )
