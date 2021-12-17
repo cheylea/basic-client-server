@@ -39,7 +39,7 @@ python server.py
 
 The output in the window will be the following:
 ```
-Server Open on 127.0.0.1:1337
+Server Open on 127.0.0.1:5000
 ```
 
 ### Client
