@@ -8,7 +8,6 @@ and send a text file to the server.
 import socket
 import pickle
 import json
-import re
 
 from dict2xml import dict2xml
 from cryptography.fernet import Fernet
