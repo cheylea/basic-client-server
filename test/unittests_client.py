@@ -1,16 +1,30 @@
 #!/usr/bin/env python3
 
 import unittest
-from ..src.client import serialize, send_data, encrypt, parse_final_data
+import os
+import inspect
+import sys
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir) 
+
+from src.client import serialize, send_data, encrypt, parse_final_data
+from src.server import decrypt
 import socket
+
+
 
 """ Client Side Unit Tests
 This file contains a unit testing class for testing the functionality
 of src/client.py.
 """
-
-
-
+pickle_string = (
+'\x80\x04\x95\x11\x00\x00\x00\x00' +
+'\x00\x00\x00}\x94(\x8c\x01a\x94K' +
+'\x01\x8c\x01b\x94K\x02u.'
+).encode("latin1")
+    
 class TestClient(unittest.TestCase):
     """ Client Side Unit Tests"""
 
@@ -49,7 +63,7 @@ class TestClient(unittest.TestCase):
         print("[*] Testing serialize for Pickle")
         self.assertEqual(
             serialize({"a": 1, "b": 2}, "1"),
-            (b'\x80\x04\x95\x11\x00\x00\x00\x00\x00\x00\x00}\x94(\x8c\x01a\x94K\x01\x8c\x01b\x94K\x02u.'
+            (pickle_string
              ,'pickle')
         )
         print("[+] Serialize for Pickle passed")
@@ -70,15 +84,17 @@ class TestClient(unittest.TestCase):
         self.assertEqual(
             send_data(parse_final_data(
                 method=method, serialized=data, option="1"),
-                    5000), None)
+                    5000), "Data Sent")
         print("[+] send_data passed")
 
     def test_encrypt(self):
         """Test the encrypt function"""
         print("[*] Testing encrypt")
-        self.assertTrue(
-            encrypt(b'a secret message') is not None
-        )
+        encrypt_string = encrypt(b'a secret message')
+        self.assertEqual(
+            decrypt(encrypt_string), b'a secret message'
+            )        
+        
         print("[+] encrypt passed")
 
     def test_parse_final_data(self):

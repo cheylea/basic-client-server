@@ -5,27 +5,34 @@ of src/server.py.
 """
 
 import unittest
-from ..src.server import decrypt, xml_deserialize, file_creator
+import os
+import inspect
+import sys
 
-from ..src.client import encrypt
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir) 
 
+from src.server import decrypt, xml_deserialize, file_creator
+from src.client import encrypt
 
 class TestServer(unittest.TestCase):
     """ Server Side Unit Tests"""
 
-    def test_server(self):
-        """Compare test value with True"""
-        self.assertTrue(True)
-
+    def test_encrypt_text(self):
+        """Check if string has interference after encryption"""
+        encrypted_text = encrypt(b"Hello World")
+        self.assertNotEqual(encrypted_text, b"Hello World")
+    
     def test_decrypt_text(self):
-        """Check if string has interference after encryption and decryption"""
+        """Check if string has interference after decryption"""
         encrypted_text = encrypt(b"Hello World")
         decrypted_text = decrypt(encrypted_text)
         self.assertEqual(decrypted_text, b"Hello World")
 
     def test_file_creator(self):
         """Test File Creation"""
-        self.assertTrue(file_creator("test content"))
+        self.assertTrue(file_creator("test content", ""))
 
     def test_xml_deserialize(self):
         """Test expected output from xml_deserialize function"""

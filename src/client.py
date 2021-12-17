@@ -8,10 +8,11 @@ and send a text file to the server.
 import socket
 import pickle
 import json
+import re 
 
 from dict2xml import dict2xml
-
 from cryptography.fernet import Fernet
+from os.path import exists as file_exists
 
 # Key for fernet encryption
 key = "R29kemlsbGFJc0p1c3RBSHVnZVRvYWRDYWxsZWRUaW0="
@@ -28,6 +29,44 @@ def encrypt(message: bytes):
     """
     return Fernet(key).encrypt(message)
 
+# Parse user input to make sure correct
+def user_input(choices):
+    """
+    take user input and make sure
+    it matches what the program is
+    expecting
+    """
+    found = "false"
+    
+    while found == "false":
+        user_choice = input()
+        if(user_choice.lower() in choices):
+            return user_choice.lower()
+        else:
+            print("### Please choose a correct option ###")
+
+def check_file():
+    """
+    Check file exists
+    Check filetype is correct
+    """
+    found = "false"
+    
+    while found == "false":
+        path = input()
+        path_split = path.split(".")
+        
+        if(file_exists(path) is True):
+            if(path_split[len(path_split) - 1] == "txt"):
+                print("### File found ###")
+                return path
+        if(path_split[len(path_split) - 1] != "txt"):
+            print("### Filetype is incorrect")
+            print("### Please enter your filename ending in .txt ###\n")
+        else:
+            print("### File does not exist ###")
+            print("### Please enter your filename ending in .txt ###\n")
+    
 
 # Send data to server
 def send_data(serialized_data, PORT):
@@ -43,6 +82,7 @@ def send_data(serialized_data, PORT):
         s.connect((HOST, PORT))
         s.sendall(serialized_data.encode('latin1'))
         data = s.recv(1024)
+        return "Data Sent"
 
 
 def dict_enter():
@@ -94,23 +134,29 @@ def main():
     """
     global default_dict
     """Serialize Section"""
-
+    
+    print("### Serialization Section ###")
     # Dictionary to send
-    d_type = input("### Do you wish to manually enter"
-                   "a dictionary? (Y) (N) ###\n")
-    if(d_type.lower() == "y"):
+    print("### Do you wish to manually enter a dictionary? (Y) (N) ###")
+    choices = ["y", "n"]
+    d_type = user_input(choices)
+    if(d_type == "y"):
         dict_enter()
     else:
         print("### Default Dictionary Used ###")
         default_dict = {"mykey": "myvalue", "yourkey": "yourvalue"}
 
     # Chose serialization type
-    s_type = input("### Please Choose Serialization Type ###"
-                   "\n### Pickle Binary (1), Json (2), XML (3) ###\n")
+    print("### Please Choose Serialization Type ###")
+    print("### Pickle Binary (1), Json (2), XML (3) ###")
+    choices = ["1","2","3"]
+    s_type = user_input(choices)
 
     # Output to screen or file
-    option = input("### Do you want to output "
-                   "to the screen (1) or file (2) ###\n").lower()
+    print("### Do you want to output to the",
+        "screen (1) or file (2) ###")
+    choices = ["1", "2"]
+    option = user_input(choices)
 
     # Append to data for later review, seperated by ~
     # Method~Serialized~Print/File
@@ -122,28 +168,48 @@ def main():
 
     # Send data to server
     send_data(final_data, 5000)
-    print("### Your data has been sent to ###")
+    print("### Your data has been sent ###")
 
     """File Section"""
+    print("\n### File Section ###")
     # File choice and encrpytion
-    file_choice = input("\n\n### Please enter your filename"
-                        "ending in .txt ###\n")
-    enc_file_choice = input("### Do you wish to locally encrypt your file?"
-                            "(Y) (N) ###\n").lower()
-
+    print("### Please enter your filename ending in .txt ###")
+    
+    file_choice = check_file()
+    
+    
+    print("### Do you wish to locally encrypt your file? (Y) (N) ###")
+    choices = ["y","n"]
+    enc_file_choice = user_input(choices)
+                            
+    # Output to screen or file
+    print("### Do you want to output the",
+        "file to the screen (1) or file (2) ###")
+    choices = ["1", "2"]
+    option = user_input(choices)  
+                   
     # Take in a read file
     f = open(file_choice, "r")
     file_contents = ""
     for line in f:
         file_contents += line
 
-    # Encrypt file contents (.txt files only contain text)
-    enc_file_content = encrypt(file_contents.encode())
+    # Encrypt file contents (.txt files only contain text) 
+    # Also adds user option at end if string
+    # e.g: ENCRYPTEDCONTENTS~1
+    enc_file_content = encrypt((file_contents + "~" + option).encode())
 
     # Save encrypted version to disc
     if(enc_file_choice == "y"):
 
         # Create encrypted file name XXXX_enc.txt
+        # Changes forward slashes to backslashes
+        file_choice = file_choice.replace("/", "\\")
+        # Split on backslash
+        file_choice = file_choice.split("\\")
+        # Take last object from list
+        file_choice = file_choice[len(file_choice) - 1]
+        # Split on . to take just filename, no extension
         split_name = file_choice.split(".")
         enc_file_name = split_name[0] + "_enc.txt"
 
