@@ -89,7 +89,10 @@ def send_data(serialized_data, PORT):
 def dict_enter():
     """Create a custom dictionary"""
     global default_dict
+    value_amounts = ""
     value_amounts = input("### How many values do you want to use? ###\n")
+    while not value_amounts.isnumeric():
+        value_amounts = input("### Please enter a number ###\n")
     for v in range(int(value_amounts)):
         dict_key = input("### Enter a key ###\n")
         dict_value = input("### Enter a value ###\n")
