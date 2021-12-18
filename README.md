@@ -25,7 +25,7 @@ C:.
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the dependencies.
 
 ```bash
-pip install -r dependencies.txt
+python -m pip install -r dependencies
 ```
 
 ## Usage
