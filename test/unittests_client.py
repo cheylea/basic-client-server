@@ -14,7 +14,7 @@ cdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(cdir)
 sys.path.insert(0, parentdir)
 
-from src.client import serialize, send_data, encrypt, parse_final_data
+from src.client import serialise, send_data, encrypt, parse_final_data
 from src.server import decrypt
 
 
@@ -40,39 +40,39 @@ class TestClient(unittest.TestCase):
                 self.assertTrue(False)
                 print("[-] Server is not active")
 
-    def test_serialize_json(self):
-        """Assert the output of the serialize function for JSON"""
-        print("[*] Testing serialize for JSON")
+    def test_serialise_json(self):
+        """Assert the output of the serialise function for JSON"""
+        print("[*] Testing serialise for JSON")
         self.assertEqual(
-            serialize({"a": 1, "b": 2}, "2"),
+            serialise({"a": 1, "b": 2}, "2"),
             (b'{\n    "a": 1,\n    "b": 2\n}', 'json')
         )
-        print("[+] Serialize for JSON passed")
+        print("[+] Serialise for JSON passed")
 
-    def test_serialize_xml(self):
-        """Assert the output of the serialize function for XML"""
-        print("[*] Testing serialize for XML")
+    def test_serialise_xml(self):
+        """Assert the output of the serialise function for XML"""
+        print("[*] Testing serialise for XML")
         self.assertEqual(
-            serialize({"a": 1, "b": 2}, "3"),
+            serialise({"a": 1, "b": 2}, "3"),
             (b'<root>\n<a>1</a>\n<b>2</b>\n</root>', 'xml')
         )
-        print("[+] Serialize for XML passed")
+        print("[+] Serialise for XML passed")
 
-    def test_serialize_pickle(self):
-        """Assert the output of the serialize function for Pickle"""
-        print("[*] Testing serialize for Pickle")
+    def test_serialise_pickle(self):
+        """Assert the output of the serialise function for Pickle"""
+        print("[*] Testing serialise for Pickle")
         self.assertEqual(
-            serialize({"a": 1, "b": 2}, "1"),
+            serialise({"a": 1, "b": 2}, "1"),
             (pickle_string,
              'pickle')
         )
-        print("[+] Serialize for Pickle passed")
+        print("[+] Serialise for Pickle passed")
 
-    def test_invalid_serialize(self):
-        """Test the serialization for an invalid type"""
-        print("[*] Testing serialize for invalid type")
+    def test_invalid_serialise(self):
+        """Test the serialisation for an invalid type"""
+        print("[*] Testing serialise for invalid type")
         self.assertEqual(
-            serialize({"a": 1, "b": 2}, "400"),
+            serialise({"a": 1, "b": 2}, "400"),
             ('', '')
         )
 
@@ -80,10 +80,10 @@ class TestClient(unittest.TestCase):
         """Test the send_data function"""
         print("[*] Testing send_data")
 
-        data, method = serialize({"a": 1, "b": 2}, "2")
+        data, method = serialise({"a": 1, "b": 2}, "2")
         self.assertEqual(
             send_data(parse_final_data(
-                method=method, serialized=data, option="1"),
+                method=method, serialised=data, option="1"),
                     5000), "Data Sent")
         print("[+] send_data passed")
 
@@ -103,7 +103,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual(
             parse_final_data(
                 method="json", option="1",
-                serialized=b'{\n    "a": 1,\n    "b": 2\n}'
+                serialised=b'{\n    "a": 1,\n    "b": 2\n}'
             ),
             "json" + '~' +
             str(b'{\n    "a": 1,\n    "b": 2\n}')[2:-1] + '~' + str("1")

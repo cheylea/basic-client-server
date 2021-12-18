@@ -5,9 +5,9 @@ This project contains both the server and client functionality for sending a dic
 ## Directory
 ```
 C:.
-│   dependencies.txt
-│   README.md
 │   LICENSE
+│   README.md
+│   requirements.txt
 │   setup.py
 │
 ├───src
@@ -25,7 +25,7 @@ C:.
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the dependencies.
 
 ```bash
-python -m pip install -r dependencies
+python -m pip install -r requirements.txt
 ```
 
 ## Usage
@@ -49,7 +49,7 @@ python client.py
 ```
 The output in the window will be the following:
 ```
-### Serialization Section ###
+### Serialisation Section ###
 ### Do you wish to manually enter a dictionary? (Y) (N) ###
 ```
 Follow the indicated steps in the terminal window in order to send an input to the server. Included in the src folder is `BestWords.txt`, an example text file that can be used to experiment with sending to the server. 
@@ -58,7 +58,7 @@ If using a file in a different location, input the full path.
 ### Example Usage
 Example of of using the programme below:
 
-![](https://i.imgur.com/nxRq3Uu.gif)
+![](https://i.imgur.com/mtrcL7p.gif)
 
 
 ## Tests
@@ -86,7 +86,7 @@ The output in the window will reflect the result of the tests. You may need to r
 ### Example Usage
 Example of test results shown below:
 
-![](https://i.imgur.com/YjNGTc1.gif)
+![](https://i.imgur.com/zdxNLBM.gif)
 
 
 ## Contributing

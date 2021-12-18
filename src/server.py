@@ -54,8 +54,8 @@ def start_server(PORT):
                 inc_data = repr(data)
 
 
-def serialized_receive():
-    """Receiving Serialized data"""
+def serialised_receive():
+    """Receiving Serialised data"""
     # Open server
     start_server(5000)
     full_data = inc_data[2:-1].split('~')
@@ -65,13 +65,13 @@ def serialized_receive():
     message = message.encode('utf-8')
     message = message.decode('unicode-escape').encode('latin1')
 
-    # De-serialize data
+    # De-serialise data
     if (full_data[0] == "pickle"):
         dict_ = pickle.loads(message)
     if (full_data[0] == "json"):
         dict_ = json.loads(message)
     if (full_data[0] == "xml"):
-        dict_ = xml_deserialize(message)
+        dict_ = xml_deserialise(message)
 
     # Output to screen or save to file
     if (full_data[2] == "1"):
@@ -80,11 +80,11 @@ def serialized_receive():
         file_creator(str(dict_), "dictionary")
 
 
-def xml_deserialize(message):
-    """De-Serialize a Serialized XML string
+def xml_deserialise(message):
+    """De-Serialise a Serialised XML string
 
     Keyword arguments:
-    message -- the string to de-serialize
+    message -- the string to de-serialise
     """
     msg_parsed = str(message)[2:-1]
     msg_deserial = xmltodict.parse(msg_parsed)
@@ -142,13 +142,13 @@ def main():
     # Data from socket
     inc_data = ""
 
-    # For testing serialized_receive()
+    # For testing serialised_receive()
     if len(sys.argv) > 1:
         if(sys.argv[1] == "-T"):
             for i in range(2):
-                serialized_receive()
+                serialised_receive()
     else:
-        serialized_receive()
+        serialised_receive()
         file_receive()
 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Client Side
 
-Run this file to create, serialize and send a dictionary
+Run this file to create, serialise and send a dictionary
 and send a text file to the server.
 """
 
@@ -70,18 +70,18 @@ def check_file():
 
 
 # Send data to server
-def send_data(serialized_data, PORT):
+def send_data(serialised_data, PORT):
     """Send the data to the server
 
     Key arguments
-    serialized_data -- a string of serialized data
+    serialised_data -- a string of serialised data
     PORT -- Server port number eg. 5000
     """
     HOST = '127.0.0.1'  # Local machine
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
-        s.sendall(serialized_data.encode('latin1'))
+        s.sendall(serialised_data.encode('latin1'))
         data = s.recv(1024)
         return "Data Sent"
 
@@ -99,37 +99,37 @@ def dict_enter():
         default_dict[dict_key] = dict_value
 
 
-def serialize(default_dict, s_type):
-    """Serialize data
+def serialise(default_dict, s_type):
+    """Serialise data
 
     Key arguments
     default_dict -- value to use as a default if other value not provided
-    s_type -- type of serilization required
+    s_type -- type of serilisation required
     """
-    serialized = ""
+    serialised = ""
     method = ""
     if(s_type == '1'):
-        serialized = pickle.dumps(default_dict)
+        serialised = pickle.dumps(default_dict)
         method = "pickle"
     if(s_type == '2'):
-        serialized = json.dumps(
+        serialised = json.dumps(
             default_dict, sort_keys=True, indent=4).encode()
         method = "json"
     if(s_type == '3'):
-        serialized = dict2xml(default_dict, wrap='root', indent="").encode()
+        serialised = dict2xml(default_dict, wrap='root', indent="").encode()
         method = "xml"
-    return serialized, method
+    return serialised, method
 
 
-def parse_final_data(method, serialized, option):
+def parse_final_data(method, serialised, option):
     """Concatenate Optional Variables
 
     Key arguments
-    method -- Serialization method: Pickle Binary (1), Json (2), XML (3)
-    serialized -- the seralized data
+    method -- Serialisation method: Pickle Binary (1), Json (2), XML (3)
+    serialised -- the seralised data
     option -- Output method: Print to Screen (1) or Save to File (2)
     """
-    return method + '~' + str(serialized)[2:-1] + '~' + str(option)
+    return method + '~' + str(serialised)[2:-1] + '~' + str(option)
 
 
 def main():
@@ -137,9 +137,9 @@ def main():
     The starting point for execution for the programme.
     """
     global default_dict
-    """Serialize Section"""
+    """Serialise Section"""
 
-    print("### Serialization Section ###")
+    print("### Serialisation Section ###")
     # Dictionary to send
     print("### Do you wish to manually enter a dictionary? (Y) (N) ###")
     choices = ["y", "n"]
@@ -150,8 +150,8 @@ def main():
         print("### Default Dictionary Used ###")
         default_dict = {"mykey": "myvalue", "yourkey": "yourvalue"}
 
-    # Chose serialization type
-    print("### Please Choose Serialization Type ###")
+    # Chose serialisation type
+    print("### Please Choose Serialisation Type ###")
     print("### Pickle Binary (1), Json (2), XML (3) ###")
     choices = ["1", "2", "3"]
     s_type = user_input(choices)
@@ -163,12 +163,12 @@ def main():
     option = user_input(choices)
 
     # Append to data for later review, seperated by ~
-    # Method~Serialized~Print/File
+    # Method~Serialised~Print/File
     # e.g. json~{\n    "mykey": "myvalue",\n    "yourkey": "yourvalue"\n}~1
 
-    serialized, method = serialize(default_dict, s_type)
+    serialised, method = serialise(default_dict, s_type)
 
-    final_data = parse_final_data(method, serialized, option)
+    final_data = parse_final_data(method, serialised, option)
 
     # Send data to server
     send_data(final_data, 5000)

@@ -12,7 +12,7 @@ cdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(cdir)
 sys.path.insert(0, parentdir)
 
-from src.server import decrypt, xml_deserialize, file_creator
+from src.server import decrypt, xml_deserialise, file_creator
 from src.client import encrypt
 
 
@@ -34,10 +34,10 @@ class TestServer(unittest.TestCase):
         """Test File Creation"""
         self.assertTrue(file_creator("test content", ""))
 
-    def test_xml_deserialize(self):
-        """Test expected output from xml_deserialize function"""
+    def test_xml_deserialise(self):
+        """Test expected output from xml_deserialise function"""
         xml_string = b'<root><a>1</a><b>2</b></root>'
-        xml_dict = xml_deserialize(xml_string)
+        xml_dict = xml_deserialise(xml_string)
         self.assertEqual(xml_dict, {'a': '1', 'b': '2'})
 
 
