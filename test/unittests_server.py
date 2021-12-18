@@ -8,8 +8,8 @@ import unittest
 import os
 import inspect
 import sys
-dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(dir)
+cdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(cdir)
 sys.path.insert(0, parentdir)
 
 from src.server import decrypt, xml_deserialize, file_creator
