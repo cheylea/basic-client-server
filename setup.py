@@ -8,12 +8,20 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='Client/Server Network',
+    name='client_server_network',
     version='0.1.0',
-    description='Basic client server for serialising and encrypting dictionaries and text files.',
+    description='Basic client server for serialising and'
+                'encrypting dictionaries and text files.',
     long_description=readme,
     author='Benjamin Barnes, Cheylea Hopkinson and Devin van Rooyen',
-    author_email='B.Barnes@liverpool.ac.uk, C.Z.L.Hopkinson@liverpool.ac.uk, D.Van-Rooyen@liverpool.ac.uk',
+    author_email='B.Barnes@liverpool.ac.uk, C.Z.L.Hopkinson@liverpool.ac.uk'
+                ', D.Van-Rooyen@liverpool.ac.uk',
     url='https://gitlab.csc.liv.ac.uk/sgchopk2/group-project-server',
     license=license,
+    packages=[''],
+    scripts=[
+             'src/server.py',
+             'src/client.py',
+            ],
+    python_requires=">=python3.8.10",
 )
