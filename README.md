@@ -2,6 +2,11 @@
 
 This project contains both the server and client functionality for sending a dictionary and text file from a client to a server with different serialisation, encryption and input/output options.
 
+Project Team Members
+- Benjamin Barnes
+- Cheylea Hopkinson
+- Devin van Rooyen
+
 ## Directory
 ```
 C:.
