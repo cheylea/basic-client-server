@@ -10,19 +10,19 @@ Project Team Members
 ## Directory
 ```
 C:.
-│   LICENSE
-│   README.md
-│   requirements.txt
-│   setup.py
+├───LICENSE
+├───README.md
+├───requirements.txt
+├───setup.py
 │
 ├───src
-│       BestWords.txt
-│       client.py
-│       server.py
+│   ├───BestWords.txt
+│   ├───client.py
+│   └───server.py
 │
 └───test
-        unittest_client.py
-        unittest_server.py
+    ├───unittest_client.py
+    └───unittest_server.py
 ```
 
 ## Installation
